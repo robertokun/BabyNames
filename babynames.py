@@ -1,3 +1,6 @@
+
+EOL = '\n'
+
 #!/usr/bin/python
 # Copyright 2010 Google Inc.
 # Licensed under the Apache License, Version 2.0
@@ -27,7 +30,7 @@ Here's what the html looks like in the baby.html files:
 ...
 
 Suggested milestones for incremental development:
- -Extract the year and print it
+ -Extract the year and print it (** DONE **)
  -Extract the names and rank numbers and just print them
  -Get the names data into a dict and print it
  -Build the [year, 'name rank', ... ] list and print it
@@ -44,26 +47,22 @@ def extract_names(filename):
   """
     inputFile = open('html_input/' + filename, 'r')
     fileString = inputFile.read()
-    popularity = Find(r'Popularity\sin\s\d\d\d\d', fileString)
-    year = Find(r'\d\d\d\d', popularity)
-    print 'The Year is:' + year
+    popularity_variable = Find(r'Popularity\sin\s\d\d\d\d', fileString)
+    year = Find(r'\d\d\d\d', popularity_variable)
+    print 'The Extracted Year is: ' + year + EOL
+    names_variable = Find(r'<td>(\d+)</td><td>(\w+)</td>\<td>(\w+)</td>', fileString)
+    print 'The names and ranks are:' + names_variable + EOL
+
 
 def Find(pat, text):
-        # print fileString
-    first_match = re.findall(pat, text)[0]
-    match = re.search(pat, text)
-    if match:
-        print first_match
-        print match.group()
-        print match
+    first_match = re.findall(pat, text)[0] #TODO ask David to explan full usage of index list usage...tried to print others and failed
+    if first_match:
+        print "got one"
     else:
         print('Not Found')
     return first_match
-    # Find('Popularity\sin\s\d\d\d\d', fileString)
 
 
-
-# TODO: ask about doint the wordcount homework perhaps first then move back to Baby Names? or vice versa?
 # inputFile = open('html_input/' + filename, 'rU')
 # for fileString in inputFile:
 # print fileString,
@@ -107,7 +106,7 @@ if __name__ == '__main__':
     # Printing the data you have at the end of one milestone helps you think about how to re-structure that data for the next milestone. Python is well suited to this style of incremental development. For example, first get it to the point where it extracts and prints the year and calls sys.exit(0). Here are some suggested milestones:
     #
     # ***Extract all the text from the file and print it
-    # Find and extract the year and print it
+    # ***Find and extract the year and print it
     # Extract the names and rank numbers and print them
     # Get the names data into a dict and print it
     # Build the [year, 'name rank', ... ] list and print it
