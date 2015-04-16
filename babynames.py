@@ -1,6 +1,6 @@
 
 EOL = '\n'
-
+TAB = '\t'
 #!/usr/bin/python
 # Copyright 2010 Google Inc.
 # Licensed under the Apache License, Version 2.0
@@ -31,7 +31,7 @@ Here's what the html looks like in the baby.html files:
 
 Suggested milestones for incremental development:
  -Extract the year and print it (** DONE **)
- -Extract the names and rank numbers and just print them
+ -Extract the names and rank numbers and just print them (** Done **)
  -Get the names data into a dict and print it
  -Build the [year, 'name rank', ... ] list and print it
  -Fix main() to use the extract_names list
@@ -39,28 +39,77 @@ Suggested milestones for incremental development:
 
 # build filename to equal: baby1990.html through baby2008.html
 def extract_names(filename):
+    names = []
+    boynames = {}
+    girlnames = []
+    inputFile = open('html_input/' + filename, 'rU')
+    fileString = inputFile.read()
+    first_match = re.findall(r'<td>(\d+)</td><td>(\w+)</td><td>(\w+)</td>', fileString)
+    if first_match:
+        print "got one"
+    else:
+        print('Not Found')
+    print first_match
+
+    for i in first_match:
+        k = 0
+        while k < 1001:
+            print i[k], i[k + 1] + EOL
+            boynames[i[k]] = i[k + 1]
+            k += 1
+        # print i[0], i[3] + EOL
+        # boynames.append(i[:0] + i[:1])
+        # girlnames.append(i[:0] + i[:3])
+    print boynames
+    return first_match
+
+
+# slice the list of tuples into a dictionary for Boys and separate one for girls
 
     """
   Given a file name for baby.html, returns a list starting with the year string
   followed by the name-rank strings in alphabetical order.
   ['2006', 'Aaliyah 91', Aaron 57', 'Abagail 895', ' ...]
   """
-    inputFile = open('html_input/' + filename, 'r')
-    fileString = inputFile.read()
-    popularity_variable = Find(r'Popularity\sin\s\d\d\d\d', fileString)
-    year = Find(r'\d\d\d\d', popularity_variable)
-    print 'The Extracted Year is: ' + year + EOL
-    names_variable = Find(r'<td>(\d+)</td><td>(\w+)</td>\<td>(\w+)</td>', fileString)
-    print 'The names and ranks are:' + names_variable + EOL
+    # inputFile = open('html_input/' + filename, 'rU')
+    # fileString = inputFile.read()
+    # popularity_variable = re.search(r'Popularity\sin\s(\d\d\d\d)', fileString)
+    # popularity_variable = Find(r'Popularity\sin\s(\d\d\d\d)', fileString)
+    # print 'This is the filename:', filename + EOL
+    # print popularity_variable
+    # print 'The Extracted Year is: ' + popularity_variable + EOL
+    # names_variable = Find(r'<td>(\d+)</td><td>(\w+)</td><td>(\w+)</td>', fileString)
+    # print names_variable
+    # print 'The names and ranks are: ' + names_variable[0] + TAB, 'Boy names:', names_variable[1] + TAB, 'Girl names: ', names_variable[2] + EOL
+    # names.append(popularity_variable)
+    # # print the statement: "rank: ## for names: $$$ and @@@"
+    # girlnames = {names_variable[0]: names_variable[2]}
+    # boynames = {names_variable[0]: names_variable[1]}
+    # print names
+    # print girlnames
+    # print boynames
+    # inputFile.close()
 
+#TODO as what is issue with changing variable from first_match to match re: match as built-in?
 
 def Find(pat, text):
-    first_match = re.findall(pat, text)[0] #TODO ask David to explan full usage of index list usage...tried to print others and failed
+    first_match = re.findall(pat, text)[0]
     if first_match:
         print "got one"
     else:
         print('Not Found')
     return first_match
+    # newinputFile = open('html_input/' + filename, 'rU')
+    # newfileString = newinputFile.read()
+    # print re.findall(r'<td>(\d+)</td><td>(\w+)</td><td>(\w+)</td>', newfileString)
+    # first_match = re.findall(r'<td>(\d+)</td><td>(\w+)</td><td>(\w+)</td>', newfileString)
+    # if first_match:
+    #     print "got one"
+    # else:
+    #     print('Not Found')
+    # newinputFile.close()
+    # return first_match
+
 
 
 # inputFile = open('html_input/' + filename, 'rU')
@@ -84,7 +133,20 @@ def main():
         summary = True
         del args[0]
 
+    """TODO: ask how to make a loop that gives every filename instead of requesting each manually?
+        TODO: go over dictionary vs lists for tuple conversion?"""
+    # for i in filename:
+    #
     extract_names('baby1990.html')
+    # extract_names('baby1992.html')
+    # extract_names('baby1994.html')
+    # extract_names('baby1996.html')
+    # extract_names('baby1998.html')
+    # extract_names('baby2000.html')
+    # extract_names('baby2002.html')
+    # extract_names('baby2004.html')
+    # extract_names('baby2006.html')
+    # extract_names('baby2008.html')
 
     # For each filename, get the names, then either print the text output
     # or write it to a summary file
@@ -137,3 +199,4 @@ if __name__ == '__main__':
     # $ grep 'Miguel ' *.summary
     # $ grep 'Emily ' *.summary
     # Regular expression hints -- year: r'Popularity\sin\s(\d\d\d\d)' names: r'<td>(\d+)</td><td>(\w+)</td>\<td>(\w+)</td>'
+
