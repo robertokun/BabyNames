@@ -1,6 +1,11 @@
 
 EOL = '\n'
 TAB = '\t'
+
+RANK_INDEX = 0
+BOY_INDEX = 1
+GIRL_INDEX = 2
+PATH_TO_HTML_FILES = 'html_input/'
 #!/usr/bin/python
 # Copyright 2010 Google Inc.
 # Licensed under the Apache License, Version 2.0
@@ -32,7 +37,7 @@ Here's what the html looks like in the baby.html files:
 Suggested milestones for incremental development:
  -Extract the year and print it (** DONE **)
  -Extract the names and rank numbers and just print them (** Done **)
- -Get the names data into a dict and print it
+ -Get the names data into a dict and print it (** DONE **)
  -Build the [year, 'name rank', ... ] list and print it
  -Fix main() to use the extract_names list
 """
@@ -41,29 +46,37 @@ Suggested milestones for incremental development:
 def extract_names(filename):
     names = []
     boynames = {}
-    girlnames = []
-    inputFile = open('html_input/' + filename, 'rU')
+    girlnames = {}
+    inputFile = open(PATH_TO_HTML_FILES + filename, 'rU')
     fileString = inputFile.read()
-    first_match = re.findall(r'<td>(\d+)</td><td>(\w+)</td><td>(\w+)</td>', fileString)
-    if first_match:
-        print "got one"
-    else:
-        print('Not Found')
-    print first_match
+    matched_names = re.findall(r'<td>(\d+)</td><td>(\w+)</td><td>(\w+)</td>', fileString)
+    # if matched_names:
+    #     print "got one"
+    # else:
+    #     print('Not Found')
+    # print matched_names
 
-    for i in first_match:
-        k = 0
-        while k < 1001:
-            print i[k], i[k + 1] + EOL
-            boynames[i[k]] = i[k + 1]
-            k += 1
-        # print i[0], i[3] + EOL
-        # boynames.append(i[:0] + i[:1])
-        # girlnames.append(i[:0] + i[:3])
-    print boynames
-    return first_match
+    for name_tuple in matched_names:
+        # print name_tuple[BOY_INDEX], name_tuple[RANK_INDEX] + EOL
+        boynames[name_tuple[BOY_INDEX]] = name_tuple[RANK_INDEX]
+        # print name_tuple[GIRL_INDEX], name_tuple[RANK_INDEX] + EOL
+        girlnames[name_tuple[GIRL_INDEX]] = name_tuple[RANK_INDEX]
+    # print '* ' * 10, 'B O Y   N A M E S', '* ' * 10
+    # print boynames
+    # print '* ' * 10, 'G I R L   N A M E S', '* ' * 10
+    # print girlnames
+
+    baby_names = []
+    for name in boynames:
+        baby_names.append(name + ' ' + boynames[name])
+    for name, rank in girlnames.iteritems():
+        baby_names.append(name + ' ' + rank)
+    baby_names.sort()
+    print EOL.join(baby_names)
+    return baby_names
 
 
+# list = ['1990', 'Albert 101', 'Andrew 213', .....]
 # slice the list of tuples into a dictionary for Boys and separate one for girls
 
     """
@@ -135,18 +148,10 @@ def main():
 
     """TODO: ask how to make a loop that gives every filename instead of requesting each manually?
         TODO: go over dictionary vs lists for tuple conversion?"""
-    # for i in filename:
-    #
-    extract_names('baby1990.html')
-    # extract_names('baby1992.html')
-    # extract_names('baby1994.html')
-    # extract_names('baby1996.html')
-    # extract_names('baby1998.html')
-    # extract_names('baby2000.html')
-    # extract_names('baby2002.html')
-    # extract_names('baby2004.html')
-    # extract_names('baby2006.html')
-    # extract_names('baby2008.html')
+    filenames = args[0:]
+    for name_of_file in filenames:
+        extract_names(name_of_file)
+
 
     # For each filename, get the names, then either print the text output
     # or write it to a summary file
