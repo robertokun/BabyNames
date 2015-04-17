@@ -55,7 +55,7 @@ def extract_names(filename):
     baby_names = []
     for name in boynames:
         baby_names.append(name + ' ' + boynames[name])
-    for name, rank in girlnames.iteritems():
+    for name, rank in girlnames.iteritems(): # for name in boynames: or for name, rank in girlnames.iteritems(): can be used!
         baby_names.append(name + ' ' + rank)
     baby_names.sort()
     popularity_variable = Find(r'Popularity\sin\s(\d\d\d\d)', fileString)
